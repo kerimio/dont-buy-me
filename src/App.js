@@ -5,6 +5,10 @@ import BarcodeScanner from './Components/BarcodeScanner.js';
 function App() {
     const [lastDetectedBarcode, setLastDetectedBarcode] = useState(null);
     const [matchResult, setMatchResult] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isScanning, setIsScanning] = useState(true);
+
+
     const brandList = [
       "Coca-Cola",
       "Freeway",
@@ -60,11 +64,19 @@ function App() {
       return () => clearInterval(interval); // Bereinigen des Intervalls beim Unmount
   }, [lastDetectedBarcode]);
 
-    const handleDetected = (result) => {
-        if (result && result.codeResult) {
-            setLastDetectedBarcode(result.codeResult.code);
-        }
-    };
+  const handleDetected = (result) => {
+    if (result && result.codeResult && isScanning) {
+        setLastDetectedBarcode(result.codeResult.code);
+        setIsScanning(false); // Stoppt das Scannen
+
+        // Setzt das Scannen nach 15 Sekunden zurück
+        setTimeout(() => {
+            setIsScanning(true);
+        }, 15000);
+    }
+};
+
+
 
     const checkBrandMatch = (vendorName) => {
         const isMatch = brandList.some(brand => 
@@ -74,14 +86,17 @@ function App() {
     };
 
     const fetchAndLogProductInfo = async (barcode) => {
-        const productInfo = await fetchProductInfo(barcode);
-        if (productInfo && productInfo.error === '0') {
-            console.log(`Produkt: ${productInfo.name}, Hersteller: ${productInfo.vendor}`);
-            checkBrandMatch(productInfo.vendor);
-        } else {
-            console.log("Produktinformationen nicht gefunden oder Fehler: ", productInfo.error);
-        }
-    };
+      setIsLoading(true); // Starten des Ladevorgangs
+      const productInfo = await fetchProductInfo(barcode);
+      if (productInfo && productInfo.error === '0') {
+          console.log(`Produkt: ${productInfo.name}, Hersteller: ${productInfo.vendor}`);
+          checkBrandMatch(productInfo.vendor);
+      } else {
+          console.log("Produktinformationen nicht gefunden oder Fehler: ", productInfo.error);
+      }
+      setIsLoading(false); // Beenden des Ladevorgangs
+  };
+  
 
     const fetchProductInfo = async (barcode) => {
         const userId = '400000000';
@@ -115,14 +130,16 @@ function App() {
     return (
       <div className="App">
           <h1>Kamera-Ansicht</h1>
-          <BarcodeScanner onDetected={handleDetected} />
-          {matchResult && (
+          <BarcodeScanner onDetected={handleDetected} isScanning={isScanning} />
+          {isLoading && <div className="loading">Lädt...</div>}
+          {matchResult && !isLoading && (
               <div className={`match-result ${matchResult}`}>
                   {matchResult.toUpperCase()}
               </div>
           )}
       </div>
   );
+  
   
 }
 
