@@ -36,3 +36,32 @@
     transform: rotate(360deg);
   }
 }
+
+
+.match-result {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: green;
+  font-size: 3rem;
+  font-weight: bold;
+  z-index: 10;
+}
+
+.match-result.no {
+  color: red;
+}
+
+/* Responsive Media Queries */
+@media (max-width: 768px) {
+  .match-result {
+      font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .match-result {
+      font-size: 1.5rem;
+  }
+}
