@@ -85,7 +85,7 @@ function App() {
 
     const fetchProductInfo = async (barcode) => {
         const userId = '400000000';
-        const apiUrl = `http://opengtindb.org/?ean=${barcode}&cmd=query&queryid=${userId}`;
+        const apiUrl = `/api/?ean=${barcode}&cmd=query&queryid=${userId}`;
 
         try {
             const response = await fetch(apiUrl);

@@ -1,0 +1,5 @@
+[[redirects]]
+  from = "/api/*"
+  to = "http://opengtindb.org/:splat"
+  status = 200
+  force = true
