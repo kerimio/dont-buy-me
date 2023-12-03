@@ -37,7 +37,13 @@
   }
 }
 
+.match-result.supported {
+  color: red; /* oder die gewünschte Farbe für "unterstützt" */
+}
 
+.match-result.not-found {
+  color: green; /* oder die gewünschte Farbe für "keine daten gefunden" */
+}
 .match-result {
   position: fixed;
   top: 50%;
@@ -72,4 +78,13 @@
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 2rem;
+}
+
+.scanned-barcodes {
+  margin-top: 20px;
+}
+
+.scanned-barcodes ul {
+  list-style-type: none;
+  padding: 0;
 }
